@@ -4,7 +4,7 @@ A lightweight VS Code extension that displays the current input language directl
 
 ![Cursor IME Indicator Demo](https://raw.githubusercontent.com/hwantage/cursor-ime-indicator/adebdedab14b3f1d874731e49f05271ac3eb8b1a/resources/showcase.gif)
 
-![Cursor IME Indicator Screenshot](https://raw.githubusercontent.com/hwantage/cursor-ime-indicator/adebdedab14b3f1d874731e49f05271ac3eb8b1a/resources/showcase.gif)
+![Cursor IME Indicator Screenshot](https://raw.githubusercontent.com/hwantage/cursor-ime-indicator/refs/heads/main/resources/showcase2.png)
 
 ## Features
 
