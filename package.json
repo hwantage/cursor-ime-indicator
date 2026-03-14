@@ -20,6 +20,14 @@
     "indicator",
     "language"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hwantage/gradle-build-helper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hwantage/gradle-build-helper/issues"
+  },
+  "homepage": "https://hwantage.github.io",
   "activationEvents": [
     "onStartupFinished"
   ],
