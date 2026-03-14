@@ -4,6 +4,8 @@ A lightweight VS Code extension that displays the current input language directl
 
 ![Cursor IME Indicator Demo](https://raw.githubusercontent.com/hwantage/cursor-ime-indicator/adebdedab14b3f1d874731e49f05271ac3eb8b1a/resources/showcase.gif)
 
+![Cursor IME Indicator Screenshot](https://raw.githubusercontent.com/hwantage/cursor-ime-indicator/adebdedab14b3f1d874731e49f05271ac3eb8b1a/resources/showcase.gif)
+
 ## Features
 
 - **Inline language indicator** — Shows a small label above your cursor so you always know which input language is active.

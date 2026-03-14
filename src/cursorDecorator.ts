@@ -48,7 +48,7 @@ export class CursorDecorator {
         contentText: this.currentLabel,
         color,
         fontWeight,
-        textDecoration: `none; font-size: ${fontSize}em; display: inline-block; width: 0; height: 0; line-height: 0; margin: 0; padding: 0; border: none; overflow: visible; white-space: nowrap; vertical-align: baseline; transform: translate(2px, ${-1.2 / fontSize}em); opacity: ${opacity}; pointer-events: none; z-index: 1;`,
+        textDecoration: `none; font-size: ${fontSize}em; display: inline-block; width: 0; height: 0; line-height: 0; margin: 0; padding: 0; border: none; overflow: visible; white-space: nowrap; vertical-align: baseline; transform: translate(2px, calc(${-1.2 / fontSize}em + 2px)); opacity: ${opacity}; pointer-events: none; z-index: 1;`,
       },
       rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
     });
