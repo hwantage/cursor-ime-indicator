@@ -1,0 +1,92 @@
+{
+  "name": "cursor-ime-indicator",
+  "displayName": "Cursor IME Indicator",
+  "description": "Shows the current input language above the cursor. Supports Korean, English, Chinese, Japanese, and 20+ global languages.",
+  "version": "0.0.1",
+  "publisher": "hwantage",
+  "icon": "resources/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "IME",
+    "input method",
+    "Korean",
+    "한글",
+    "cursor",
+    "indicator",
+    "language"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cursorImeIndicator.toggle",
+        "title": "Cursor IME Indicator: Toggle"
+      }
+    ],
+    "configuration": {
+      "title": "Cursor IME Indicator",
+      "properties": {
+        "cursorImeIndicator.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the IME indicator above cursor"
+        },
+        "cursorImeIndicator.fontSize": {
+          "type": "number",
+          "default": 0.8,
+          "minimum": 0.3,
+          "maximum": 3.0,
+          "description": "Font size relative to editor font (0.3 ~ 3.0, max 3)"
+        },
+        "cursorImeIndicator.opacity": {
+          "type": "number",
+          "default": 0.7,
+          "minimum": 0.1,
+          "maximum": 1.0,
+          "description": "Indicator opacity (0.1 ~ 1.0)"
+        },
+        "cursorImeIndicator.bold": {
+          "type": "boolean",
+          "default": true,
+          "description": "Display indicator in bold font"
+        },
+        "cursorImeIndicator.color": {
+          "type": "string",
+          "default": "",
+          "description": "Indicator text color (empty = use cursor color)"
+        },
+        "cursorImeIndicator.pollingInterval": {
+          "type": "number",
+          "default": 300,
+          "minimum": 100,
+          "maximum": 2000,
+          "description": "Polling interval in ms (fallback mode only)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "compile:native": "mkdir -p resources/bin && swiftc -O -o resources/bin/im-detect native/macos/im-detect.swift -framework Carbon -framework Cocoa",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.56.0"
+  }
+}
