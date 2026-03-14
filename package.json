@@ -2,7 +2,7 @@
   "name": "cursor-ime-indicator",
   "displayName": "Cursor IME Indicator",
   "description": "Shows the current input language above the cursor. Supports Korean, English, Chinese, Japanese, and 20+ global languages.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "hwantage",
   "icon": "resources/icon.png",
   "engines": {

@@ -2,7 +2,7 @@
 
 A lightweight VS Code extension that displays the current input language directly above your cursor. Never accidentally type in the wrong language again.
 
-![Cursor IME Indicator Demo](https://private-user-images.githubusercontent.com/82494320/563495727-73532b13-a6ec-46da-9a19-852aca4b0d74.gif?jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NzM0ODE0NDQsIm5iZiI6MTc3MzQ4MTE0NCwicGF0aCI6Ii84MjQ5NDMyMC81NjM0OTU3MjctNzM1MzJiMTMtYTZlYy00NmRhLTlhMTktODUyYWNhNGIwZDc0LmdpZj9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNjAzMTQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjYwMzE0VDA5MzkwNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTk2MGRlMzI2MGQxOWY3MDVmZjg3NjQ3ODFjM2M1MjQ5NzFjNGU1YmIxZjYwM2Y1MWVmOTc3NGFkYjg3NjQ2YTUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.isBasMbvGP5_3zuAmUSzrbyPMGxJuU0J3kSk84C6DQM)
+![Cursor IME Indicator Demo](https://raw.githubusercontent.com/hwantage/cursor-ime-indicator/adebdedab14b3f1d874731e49f05271ac3eb8b1a/resources/showcase.gif)
 
 ## Features
 
@@ -113,23 +113,6 @@ The native helper is automatically compiled on first activation and cached for s
 ## Contributing
 
 Contributions are welcome! Please feel free to submit issues and pull requests.
-
-### Development
-
-```bash
-# Clone and install
-git clone https://github.com/hwantage/cursor-ime-indicator.git
-cd cursor-ime-indicator
-npm install
-
-# Build
-npm run compile            # Build extension
-npm run compile:native     # Build macOS native helper
-npm run watch              # Watch mode
-
-# Test
-# Press F5 in VS Code to launch Extension Development Host
-```
 
 ## License
 
