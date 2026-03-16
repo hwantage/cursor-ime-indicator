@@ -9,9 +9,18 @@ A lightweight VS Code extension that displays the current input language directl
 ## Features
 
 - **Inline language indicator** — Shows a small label above your cursor so you always know which input language is active.
-- **Instant detection** — Uses a native event-driven watcher on macOS for real-time input source changes with zero polling overhead.
+- **Cross-platform** — Works on both macOS and Windows with native-level detection.
+- **Instant detection** — Uses native event-driven watchers for real-time input source changes with minimal overhead.
+- **IME mode aware** — Detects 한/영 toggle and CJK IME mode switches, not just keyboard layout changes.
 - **25+ languages supported** — Korean, English, Chinese, Japanese, and many more out of the box.
 - **Fully customizable** — Adjust font size, opacity, color, and bold style to match your theme.
+
+## Supported Platforms
+
+| Platform | Primary Detection | Fallback |
+|----------|------------------|----------|
+| **macOS** | Swift native watcher (event-driven, zero polling) | `defaults read` periodic polling |
+| **Windows** | C# native helper (IMM API, 200ms polling) | PowerShell periodic polling |
 
 ## Supported Languages
 
@@ -37,25 +46,25 @@ A lightweight VS Code extension that displays the current input language directl
 
 ## Requirements
 
-- **macOS** (primary platform — uses native `DistributedNotificationCenter` for event-driven detection)
 - VS Code 1.85.0 or later
-- Xcode Command Line Tools (for first-run native helper compilation; falls back to polling if unavailable)
+- **macOS**: Xcode Command Line Tools (for first-run native helper compilation; falls back to polling if unavailable)
+- **Windows**: .NET Framework 4.x (pre-installed on Windows 10/11; falls back to PowerShell if unavailable)
 
-> Windows and Linux support is planned for a future release.
+> Linux support is planned for a future release.
 
 ## Installation
 
 ### From VS Code Marketplace
 
 1. Open VS Code
-2. Go to Extensions (`Cmd+Shift+X`)
+2. Go to Extensions (`Cmd+Shift+X` / `Ctrl+Shift+X`)
 3. Search for **Cursor IME Indicator**
 4. Click **Install**
 
 ### From VSIX
 
 ```bash
-code --install-extension cursor-ime-indicator-0.0.1.vsix
+code --install-extension cursor-ime-indicator-0.0.7.vsix
 ```
 
 ## Extension Settings
@@ -87,7 +96,7 @@ code --install-extension cursor-ime-indicator-0.0.1.vsix
 |---------|-------------|
 | `Cursor IME Indicator: Toggle` | Toggle the indicator on/off |
 
-Access via Command Palette (`Cmd+Shift+P`).
+Access via Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`).
 
 ## How It Works
 
@@ -98,12 +107,26 @@ Access via Command Palette (`Cmd+Shift+P`).
 
 The native helper is automatically compiled on first activation and cached for subsequent sessions.
 
+### Windows
+
+1. **Primary**: A native C# helper uses Win32 APIs (`GetKeyboardLayout` + IMM `ImmGetDefaultIMEWnd`) to detect both keyboard layout changes and IME mode switches (e.g., 한/영 toggle). Polls at 200ms intervals and outputs only on change.
+2. **Fallback**: If the C# helper cannot be compiled (no `csc.exe`), the extension falls back to a PowerShell-based detector with the same IMM API, or a simple periodic polling via `InputLanguage` API.
+
+The native helper is automatically compiled using `csc.exe` (.NET Framework) on first activation and cached for subsequent sessions.
+
 ## Known Issues
 
 - On the first line of a file, the indicator may be partially clipped at the top edge.
 - The indicator position may vary slightly depending on editor font and line height settings.
 
 ## Release Notes
+
+### 0.0.7
+
+- Windows support with native C# IME detection
+- IME mode awareness (한/영 toggle, CJK conversion mode detection)
+- 3-tier fallback on Windows (native → PowerShell persistent → PowerShell simple polling)
+- Platform-specific detector architecture for easier future platform additions
 
 ### 0.0.1
 
