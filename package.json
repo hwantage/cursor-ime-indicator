@@ -2,7 +2,7 @@
   "name": "cursor-ime-indicator",
   "displayName": "Cursor IME Indicator",
   "description": "Shows the current input language above the cursor. Supports Korean, English, Chinese, Japanese, and 20+ global languages.",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "publisher": "hwantage",
   "icon": "resources/icon.png",
   "engines": {
@@ -86,6 +86,7 @@
     "compile": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
     "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
     "compile:native": "mkdir -p resources/bin && swiftc -O -o resources/bin/im-detect native/macos/im-detect.swift -framework Carbon -framework Cocoa",
+    "compile:native:windows": "csc /optimize /out:resources\\bin\\im-detect.exe native\\windows\\im-detect.cs",
     "lint": "eslint src --ext ts"
   },
   "devDependencies": {
