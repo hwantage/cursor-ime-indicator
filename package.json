@@ -37,8 +37,20 @@
       {
         "command": "cursorImeIndicator.toggle",
         "title": "Cursor IME Indicator: Toggle"
+      },
+      {
+        "command": "cursorImeIndicator.simulateLanguage",
+        "title": "Cursor IME Indicator: Simulate Language (Test)"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "cursorImeIndicator.simulateLanguage",
+          "when": "cursorImeIndicator.isDevelopment"
+        }
+      ]
+    },
     "configuration": {
       "title": "Cursor IME Indicator",
       "properties": {
