@@ -37,9 +37,12 @@ export class MacosDetector implements PlatformDetector {
         stdio: ['ignore', 'pipe', 'pipe'],
       });
 
+      let stdoutBuffer = '';
       this.nativeProcess.stdout?.setEncoding('utf-8');
       this.nativeProcess.stdout?.on('data', (data: string) => {
-        const lines = data.split('\n');
+        stdoutBuffer += data;
+        const lines = stdoutBuffer.split('\n');
+        stdoutBuffer = lines.pop() || '';
         for (const line of lines) {
           const trimmed = line.trim();
           if (trimmed) {

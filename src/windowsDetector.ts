@@ -37,9 +37,12 @@ export class WindowsDetector implements PlatformDetector {
         stdio: ['ignore', 'pipe', 'pipe'],
       });
 
+      let stdoutBuffer = '';
       this.watcherProcess.stdout?.setEncoding('utf-8');
       this.watcherProcess.stdout?.on('data', (data: string) => {
-        const lines = data.split('\n');
+        stdoutBuffer += data;
+        const lines = stdoutBuffer.split('\n');
+        stdoutBuffer = lines.pop() || '';
         for (const line of lines) {
           const trimmed = line.trim();
           if (trimmed) {
@@ -176,9 +179,12 @@ export class WindowsDetector implements PlatformDetector {
           { stdio: ['ignore', 'pipe', 'pipe'] }
         );
 
+        let psStdoutBuffer = '';
         this.watcherProcess.stdout?.setEncoding('utf-8');
         this.watcherProcess.stdout?.on('data', (data: string) => {
-          const lines = data.split('\n');
+          psStdoutBuffer += data;
+          const lines = psStdoutBuffer.split('\n');
+          psStdoutBuffer = lines.pop() || '';
           for (const line of lines) {
             const trimmed = line.trim();
             if (trimmed) {

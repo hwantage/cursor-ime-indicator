@@ -78,7 +78,7 @@ class ImDetect
                 // Ignore errors and continue polling
             }
 
-            Thread.Sleep(200);
+            Thread.Sleep(30);
         }
     }
 }

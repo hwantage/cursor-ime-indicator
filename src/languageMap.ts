@@ -237,14 +237,29 @@ function extractFallbackLabel(inputSourceId: string): string {
   return lastSegment.substring(0, 2).toUpperCase();
 }
 
+const labelCache = new Map<string, string>();
+
 export function getLanguageLabel(inputSourceId: string): string {
+  if (labelCache.has(inputSourceId)) {
+    return labelCache.get(inputSourceId)!;
+  }
+
+  let label: string | undefined;
+
   for (const rule of languageRules) {
     for (const pattern of rule.patterns) {
       if (pattern.test(inputSourceId)) {
-        return rule.label;
+        label = rule.label;
+        break;
       }
     }
+    if (label) break;
   }
 
-  return extractFallbackLabel(inputSourceId);
+  if (!label) {
+    label = extractFallbackLabel(inputSourceId);
+  }
+
+  labelCache.set(inputSourceId, label);
+  return label;
 }

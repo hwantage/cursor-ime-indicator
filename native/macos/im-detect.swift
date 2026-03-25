@@ -24,8 +24,8 @@ DistributedNotificationCenter.default().addObserver(
     object: nil,
     queue: .main
 ) { _ in
-    // Small delay to ensure the input source has fully switched
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+    // Print immediately on notification for zero-lag detection
+    DispatchQueue.main.async {
         printCurrentInputSource()
     }
 }
