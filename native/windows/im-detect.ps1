@@ -20,6 +20,32 @@ public class IMEDetector
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct GUITHREADINFO
+    {
+        public int cbSize;
+        public int flags;
+        public IntPtr hwndActive;
+        public IntPtr hwndFocus;
+        public IntPtr hwndCapture;
+        public IntPtr hwndMenuOwner;
+        public IntPtr hwndMoveSize;
+        public IntPtr hwndCaret;
+        public RECT rcCaret;
+    }
+
+    [DllImport("user32.dll")]
+    public static extern bool GetGUIThreadInfo(uint idThread, ref GUITHREADINFO lpgui);
+
     public static string Detect()
     {
         IntPtr hwnd = GetForegroundWindow();
@@ -32,10 +58,25 @@ public class IMEDetector
 
         if (cultureName.StartsWith("ko") || cultureName.StartsWith("ja") || cultureName.StartsWith("zh"))
         {
-            IntPtr imeWnd = ImmGetDefaultIMEWnd(hwnd);
-            if (imeWnd != IntPtr.Zero)
+            IntPtr targetHwnd = hwnd;
+            GUITHREADINFO gui = new GUITHREADINFO();
+            gui.cbSize = Marshal.SizeOf(gui);
+            if (GetGUIThreadInfo(threadId, ref gui))
             {
-                int mode = (int)SendMessage(imeWnd, 0x0283u, (IntPtr)1, IntPtr.Zero);
+                if (gui.hwndFocus != IntPtr.Zero) targetHwnd = gui.hwndFocus;
+            }
+
+            IntPtr imeWnd = ImmGetDefaultIMEWnd(targetHwnd);
+            if (imeWnd == IntPtr.Zero && targetHwnd != hwnd)
+            {
+                imeWnd = ImmGetDefaultIMEWnd(hwnd);
+            }
+
+            IntPtr handleToUse = (imeWnd != IntPtr.Zero) ? imeWnd : targetHwnd;
+
+            if (handleToUse != IntPtr.Zero)
+            {
+                int mode = (int)SendMessage(handleToUse, 0x0283u, (IntPtr)1, IntPtr.Zero);
                 if ((mode & 1) == 0) return "en-US";
             }
         }

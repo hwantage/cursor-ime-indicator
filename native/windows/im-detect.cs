@@ -20,6 +20,32 @@ class ImDetect
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
 
+    [StructLayout(LayoutKind.Sequential)]
+    struct RECT
+    {
+        public int Left;
+        public int Top;
+        public int Right;
+        public int Bottom;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    struct GUITHREADINFO
+    {
+        public int cbSize;
+        public int flags;
+        public IntPtr hwndActive;
+        public IntPtr hwndFocus;
+        public IntPtr hwndCapture;
+        public IntPtr hwndMenuOwner;
+        public IntPtr hwndMoveSize;
+        public IntPtr hwndCaret;
+        public RECT rcCaret;
+    }
+
+    [DllImport("user32.dll")]
+    static extern bool GetGUIThreadInfo(uint idThread, ref GUITHREADINFO lpgui);
+
     const uint WM_IME_CONTROL = 0x0283;
     const int IMC_GETCONVERSIONMODE = 0x0001;
     const int IME_CMODE_NATIVE = 0x0001;
@@ -46,12 +72,34 @@ class ImDetect
                 // For CJK IMEs, check conversion mode to detect 한/영 toggle etc.
                 if (cultureName.StartsWith("ko") || cultureName.StartsWith("ja") || cultureName.StartsWith("zh"))
                 {
-                    IntPtr imeWnd = ImmGetDefaultIMEWnd(hwnd);
-                    if (imeWnd != IntPtr.Zero)
+                    IntPtr targetHwnd = hwnd;
+                    GUITHREADINFO gui = new GUITHREADINFO();
+                    gui.cbSize = Marshal.SizeOf(gui);
+                    if (GetGUIThreadInfo(threadId, ref gui))
                     {
-                        int conversionMode = (int)SendMessage(imeWnd, WM_IME_CONTROL,
+                        if (gui.hwndFocus != IntPtr.Zero)
+                        {
+                            targetHwnd = gui.hwndFocus;
+                        }
+                    }
+
+                    IntPtr imeWnd = ImmGetDefaultIMEWnd(targetHwnd);
+                    if (imeWnd == IntPtr.Zero && targetHwnd != hwnd)
+                    {
+                        imeWnd = ImmGetDefaultIMEWnd(hwnd);
+                    }
+
+                    // If we still don't have an IME window, some apps respond if we send directly to the focused window.
+                    // But usually IMC_GETCONVERSIONMODE requires the IME window.
+                    IntPtr handleToUse = (imeWnd != IntPtr.Zero) ? imeWnd : targetHwnd;
+
+                    if (handleToUse != IntPtr.Zero)
+                    {
+                        int conversionMode = (int)SendMessage(handleToUse, WM_IME_CONTROL,
                             (IntPtr)IMC_GETCONVERSIONMODE, IntPtr.Zero);
 
+                        // If SendMessage failed or returned 0, it might mean alphanumeric mode (0x0).
+                        // In some cases, it might return -1 on error depending on how the window handles it.
                         bool isNative = (conversionMode & IME_CMODE_NATIVE) != 0;
                         if (!isNative)
                         {

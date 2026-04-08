@@ -121,6 +121,14 @@ The native helper is automatically compiled using `csc.exe` (.NET Framework) on 
 
 ## Release Notes
 
+### 0.1.0
+
+- **Windows**: Significantly improved IME detection accuracy in Electron-based apps like VS Code using `GetGUIThreadInfo` API.
+- **Windows**: Added multi-tier fallback logic for IME window handle retrieval to ensure reliable state detection.
+- **Windows**: Enhanced alphanumeric mode detection appearing incorrectly when in English mode.
+- **Windows**: Improved native helper compilation stability by removing external GDI+ dependencies.
+- **Windows**: Applied consistent IME mode check logic across all detection tiers (Native, PowerShell persistent, and simple polling).
+
 ### 0.0.7
 
 - Windows support with native C# IME detection

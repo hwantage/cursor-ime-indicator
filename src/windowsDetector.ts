@@ -240,13 +240,41 @@ export class WindowsDetector implements PlatformDetector {
   }
 
   private pollWindowsSimple(): void {
+    const psCommand = `
+      $def = @'
+      using System;
+      using System.Runtime.InteropServices;
+      using System.Globalization;
+      public class IMEDetector {
+          [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+          [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint pId);
+          [DllImport("user32.dll")] public static extern IntPtr GetKeyboardLayout(uint idThread);
+          [DllImport("imm32.dll")] public static extern IntPtr ImmGetDefaultIMEWnd(IntPtr hWnd);
+          [DllImport("user32.dll", CharSet = CharSet.Auto)] public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+          public static string Detect() {
+              IntPtr hwnd = GetForegroundWindow();
+              uint pId;
+              uint threadId = GetWindowThreadProcessId(hwnd, out pId);
+              IntPtr hkl = GetKeyboardLayout(threadId);
+              string cultureName = CultureInfo.GetCultureInfo((int)hkl & 0xFFFF).Name;
+              if (cultureName.StartsWith("ko") || cultureName.StartsWith("ja") || cultureName.StartsWith("zh")) {
+                  IntPtr imeWnd = ImmGetDefaultIMEWnd(hwnd);
+                  if (imeWnd != IntPtr.Zero) {
+                      int mode = (int)SendMessage(imeWnd, 0x0283u, (IntPtr)1, IntPtr.Zero);
+                      if ((mode & 1) == 0) return "en-US";
+                  }
+              }
+              return cultureName;
+          }
+      }
+'@
+      Add-Type -TypeDefinition $def -ErrorAction SilentlyContinue
+      [IMEDetector]::Detect()
+    `.replace(/\n/g, ' ');
+
     execFile(
       'powershell',
-      [
-        '-NoProfile',
-        '-Command',
-        'Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.InputLanguage]::CurrentInputLanguage.Culture.Name',
-      ],
+      ['-NoProfile', '-Command', psCommand],
       { encoding: 'utf-8', timeout: 5000 },
       (err, stdout) => {
         if (err) {
